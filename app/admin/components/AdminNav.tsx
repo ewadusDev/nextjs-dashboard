@@ -5,12 +5,12 @@ import Image from 'next/image'
 
 const AdminNav = () => {
     return (
-        <nav className='shadow-xl'>
+        <nav className='shadow-xl h-[60px]'>
             <div className='container mx-auto'>
                 <div className='flex justify-between items-center p-4'>
-                    <div>
+                    <div className='text-xl font-bold'>
                         <Link href={"/admin"}>
-                            <Image src={Logo} alt='Logo' width={100} height={100} />
+                           ADMIN BOARD
                         </Link>
                     </div>
                     <ul className='flex'>
