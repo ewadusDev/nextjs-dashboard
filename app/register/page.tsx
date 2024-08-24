@@ -11,6 +11,7 @@ const RegisterPage = () => {
     const [password, setPassword] = useState<string>("")
     const [cfPassword, setCFPassword] = useState<string>("")
     const [error, setError] = useState<string>("")
+    const [sucess, setSeuccess] = useState<string>("")
 
     const hanndleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -31,7 +32,30 @@ const RegisterPage = () => {
             return
         }
 
+
+
         try {
+
+            // Check Exist User first
+            const respExistUser = await fetch('/api/userExist', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email })
+            })
+
+            const { user } = await respExistUser.json()
+
+            if (user) {
+                setError('Already had account')
+                setTimeout(() => {
+                    setError('')
+                }, 3000);
+                return
+            }
+
+            // If does not exist then register
             const response = await fetch('/api/register', {
                 method: "POST",
                 headers: {
@@ -45,11 +69,15 @@ const RegisterPage = () => {
                 setPassword("");
                 setCFPassword("");
                 setError("");
+                setSeuccess("Register sucessfully")
+                setTimeout(() => {
+                    setSeuccess('')
+                }, 3000);
             } else {
                 console.log("User registration failed")
             }
         } catch (err) {
-            console.error("Error",err)
+            console.error("Error", err)
         }
     }
 
@@ -66,11 +94,19 @@ const RegisterPage = () => {
                             <input type="email" className='w-full bg-gray-200 border py-2 px-3 rounded text-lg my-2' placeholder='Enter your email' onChange={(e) => setEmail(e.target.value)} value={email} />
                             <input type="password" className='w-full bg-gray-200 border py-2 px-3 rounded text-lg my-2' placeholder='Enter your password' onChange={(e) => setPassword(e.target.value)} value={password} />
                             <input type="password" className='w-full bg-gray-200 border py-2 px-3 rounded text-lg my-2' placeholder='Enter your confirm password' onChange={(e) => setCFPassword(e.target.value)} value={cfPassword} />
+
                             {error && (
                                 <div className='bg-red-500 w-fit text-sm text-white py-1 px-3 rounded-md my-2'>
                                     {error}
                                 </div>
                             )}
+
+                            {sucess && (
+                                <div className='bg-green-500 w-fit text-sm text-white py-1 px-3 rounded-md my-2'>
+                                    {sucess}
+                                </div>
+                            )}
+
                             <button className='bg-green-500 text-white border py-2 px-3 rounded text-lg my-2'>Sign up</button>
                             <hr className='my-3' />
                             <p>
