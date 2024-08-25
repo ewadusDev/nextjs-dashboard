@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
 import "./globals.css";
-
+import { AuthProvider } from "./Provider";
 const unbutu = Ubuntu({ subsets: ['latin'], weight: ['300', '400', '500', '700'] });
 
 export const metadata: Metadata = {
@@ -16,7 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={unbutu.className}>{children}</body>
+      <body className={unbutu.className}>
+        <AuthProvider>
+        {children}
+        </AuthProvider>
+        </body>
     </html>
   );
 }
