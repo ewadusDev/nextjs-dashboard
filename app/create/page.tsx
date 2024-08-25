@@ -1,14 +1,17 @@
+'use client'
 import React from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Link from 'next/link'
 import Container from '../components/Container'
+import { useSession } from 'next-auth/react'
 
 
 const CreatePage = () => {
+    const { data: session } = useSession()
     return (
         <Container>
-            <Navbar />
+            <Navbar session={session} />
             <div className='flex-grow'>
                 <div className='container mx-auto shadow-xl my-10 p-10 rounded-xl'>
                     <Link href={"/welcome"} className='bg-gray-500 inline-block text-white border py-2 px-3 rounded my-2'>Go back</Link>

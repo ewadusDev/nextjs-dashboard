@@ -1,21 +1,27 @@
+"use client"
 import React from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import Container from '../components/Container'
-
+import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 
 const WelcomePage = () => {
+    const { data: session } = useSession()
+    console.log("Session FN", session)
+    if (!session) redirect('/login')
     return (
         <Container>
-            <Navbar />
+            <Navbar session={session} />
             <div className='flex-grow'>
                 <div className='container mx-auto shadow-xl my-10 p-10 rounded-xl'>
                     <div className="flex justify-between">
                         <div>
                             <h3 className='text-3xl'>Profile</h3>
-                            <p>Welcome, Ruknakub</p>
+                            <p>Welcome, {session?.user?.name}</p>
+                            <p>Email, {session?.user?.email}</p>
                         </div>
                         <div>
                             <Link href={"/create"} className='bg-green-500 text-white border py-2 px-3 rounded-md text-lg my-2'>Create Post</Link>

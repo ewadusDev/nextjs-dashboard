@@ -18,9 +18,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={unbutu.className}>
         <AuthProvider>
-        {children}
+          {children}
         </AuthProvider>
-        </body>
+      </body>
     </html>
   );
 }

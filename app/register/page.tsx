@@ -4,6 +4,9 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Container from '../components/Container'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
+
 
 const RegisterPage = () => {
     const [name, setName] = useState<string>("")
@@ -12,6 +15,9 @@ const RegisterPage = () => {
     const [cfPassword, setCFPassword] = useState<string>("")
     const [error, setError] = useState<string>("")
     const [sucess, setSeuccess] = useState<string>("")
+
+    const { data: session } = useSession()
+    if(session) redirect('/welcome')
 
     const hanndleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -83,7 +89,7 @@ const RegisterPage = () => {
 
     return (
         <Container>
-            <Navbar />
+            <Navbar session={session} />
             <div className='flex-grow'>
                 <div className='flex justify-center items-center'>
                     <div className='w-[400px] shadow-xl p-10 mt-5 rounded-xl'>

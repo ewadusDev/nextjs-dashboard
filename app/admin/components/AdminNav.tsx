@@ -18,7 +18,7 @@ const AdminNav = () => {
                             <Link href={"/login"}>Login</Link>
                         </li>
                         <li className='mx-3'>
-                            <Link href={"/register "}>Register</Link>
+                            <Link href={"/register"}>Register</Link>
                         </li>
                     </ul>
                 </div>

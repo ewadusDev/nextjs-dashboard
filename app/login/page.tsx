@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Container from '../components/Container'
 import Link from 'next/link'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
 
@@ -12,23 +12,23 @@ const LoginPage = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
-
+    const { data: session } = useSession()
     const router = useRouter()
+
+    if(session) router.replace("welcome")
 
     const handeSubmit = async (event: FormEvent) => {
         event.preventDefault()
 
         try {
-
             const resp = await signIn("credentials", {
                 email, password, redirect: false
             })
 
-            if(resp?.error){
+            if (resp?.error) {
                 setError("Invalid Credentials")
                 return
             }
-
             router.replace("welcome")
 
         } catch (err) {
@@ -38,7 +38,7 @@ const LoginPage = () => {
 
     return (
         <Container>
-            <Navbar />
+            <Navbar  session={session}/>
             <div className='flex-grow'>
                 <div className='flex justify-center items-center'>
                     <div className='w-[400px] shadow-xl p-10 mt-5 rounded-xl'>
