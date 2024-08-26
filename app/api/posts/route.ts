@@ -1,6 +1,6 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import Post from "@/models/post";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(req: Request) {
     const { title, img, content, userEmail } = await req.json()
@@ -12,4 +12,12 @@ export async function POST(req: Request) {
     } catch (err) {
         return NextResponse.json({ message: `Post is interupted: ${err}` }, { status: 500 })
     }
+}
+
+export async function GET(req: NextRequest) {
+    const userEmail = req.nextUrl.searchParams.get("email")  // หน้าบ้าน ยิงขอผ่าน /api/posts?email=ruk@gmail.com  ?email คือที่มันดักจาก req.nextUrl.searchParams.get
+    await connectMongoDB()
+    const posts = await Post.find({ userEmail: userEmail })
+    return NextResponse.json({ posts })
+
 }

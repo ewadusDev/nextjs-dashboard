@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Link from 'next/link'
@@ -8,10 +8,54 @@ import Container from '../components/Container'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 
+interface Getpost {
+    _id: string
+    title: string
+    img: string
+    content: string
+    userEmail: string
+}
+
+interface Posts {
+    posts: Getpost[]
+}
+
 const WelcomePage = () => {
     const { data: session } = useSession()
-    console.log("Session FN", session)
     if (!session) redirect('/login')
+    const [posts, setPosts] = useState<Posts | null>(null)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
+    const currentUserEmail = session.user?.email
+
+
+    useEffect(() => {
+
+        const getPost = async () => {
+            setLoading(true)
+            try {
+                const resp = await fetch(`/api/posts?email=${currentUserEmail}`, {
+                    cache: 'no-store'
+                })
+
+                if (!resp.ok) {
+                    setError("Error")
+                    throw new Error("Failed to fetch posts")
+                }
+
+                const data = await resp.json()
+                setPosts(data)
+
+            } catch (err) {
+                console.error(err)
+                setError("Error")
+            }
+            setLoading(false)
+        }
+
+        getPost()
+
+    }, [currentUserEmail])
     return (
         <Container>
             <Navbar session={session} />
@@ -29,25 +73,39 @@ const WelcomePage = () => {
                     </div>
 
                     {/* User Posts Data */}
-                    <div>
-                        <div className='shadow-xl my-10 p-10 rounded-xl'>
-                            <h4 className='text-2xl'>Post Title</h4>
-                            <Image
-                                className='my-3 rounded-md'
-                                src={"https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29kaW5nfGVufDB8fDB8fHww"}
-                                width={300} height={0} alt='Post Image' />
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora, dolorum cupiditate consectetur corporis laudantium quis! Optio quisquam mollitia, perspiciatis itaque ipsam aperiam consectetur illum. Fugiat explicabo corporis minima sequi vel.</p>
-                            <div className="mt-5">
-                                <Link href={"/edit"} className='bg-gray-500 text-white border py-2 px-3 rounded-md text-lg my-2'>Edit</Link>
-                                <Link href={"/delete"} className='bg-red-500 text-white border py-2 px-3 rounded-md text-lg my-2'>Delete</Link>
+                    {loading ? (
+                        <p>loading.....</p>
+                    ) : error ? (
+                        <p>{error}</p>
+                    ) : (
+                        <>
+                            {posts?.posts.map((val, index) => {
+                                return (
+                                    <div key={index}>
+                                        <div className='shadow-xl my-10 p-10 rounded-xl'>
+                                            <h4 className='text-2xl'>{val.title}</h4>
+                                            <Image
+                                                className='my-3 rounded-md'
+                                                src={val.img}
+                                                width={300} height={0} alt='Post Image' />
+                                            <p>{val.content}</p>
+                                            <div className="mt-5">
+                                                <Link href={`/edit/${val._id}`} className='bg-gray-500 text-white border py-2 px-3 rounded-md text-lg my-2'>Edit</Link>
+                                                <Link href={`/delete/${val._id}`} className='bg-red-500 text-white border py-2 px-3 rounded-md text-lg my-2'>Delete</Link>
 
-                            </div>
-                        </div>
-                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </>
+                    )}
+
+
                 </div>
-            </div>
+            </div >
             <Footer />
-        </Container>
+        </Container >
 
     )
 }
