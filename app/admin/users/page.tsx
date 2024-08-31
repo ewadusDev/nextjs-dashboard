@@ -1,9 +1,13 @@
-import React from 'react'
+"use client"
+import React, { useEffect, useState } from 'react'
 import AdminNav from '../components/AdminNav'
 import Containers from '../components/Containers'
 import Footer from '../components/Footer'
 import SideNav from '../components/SideNav'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
+
 
 const page = () => {
   const style = {
@@ -14,9 +18,35 @@ const page = () => {
     opacity: '10%'
   } as React.CSSProperties;
 
+  const { data: session } = useSession()
+  if (!session) redirect('/login')
+  if (session.user?.role !== "admin") redirect('/welcome')
+
+  const [allUserData, setAllUserData] = useState([])
+
+  const getAllUserData = async () => {
+    try {
+      const resp = await fetch("/api/totalusers", {
+        cache: 'no-store'
+      })
+
+      if (!resp.ok) throw new Error("Failed to fetch user")
+      const data = await resp.json()
+      setAllUserData(data)
+    } catch (err) {
+      console.error("Error loading users: ", err)
+    }
+  }
+
+  useEffect(() => {
+    getAllUserData()
+  }, [])
+
+  console.log(allUserData?.totalUsers)
+
   return (
     <Containers>
-      <AdminNav />
+      <AdminNav session={session} />
       <div className='flex-grow'>
         <div className='w-screen h-[calc(100vh-60px)] absolute' style={style} />
         <div className='flex mt-10 relative z-30'>
@@ -32,23 +62,29 @@ const page = () => {
                     <th className='p-5'>ID</th>
                     <th className='p-5'>Username</th>
                     <th className='p-5'>Email</th>
-                    <th className='p-5'>Password</th>
+                    <th className='p-5'>Role</th>
                     <th className='p-5'>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className='p-5'>adds13141</td>
-                    <td className='p-5'>Steve Roger</td>
-                    <td className='p-5'>steve@gmail.com</td>
-                    <td className='p-5'>123412313</td>
-                    <td className='p-5'>
-                      <Link href={"/admin/users/edit"} className='bg-gray-500 text-white border py-2 px-3 rounded text-lg my-2 shadow-lg'>Edit</Link>
-                      <Link href={"/admin/users/delete"} className='bg-red-500 text-white border py-2 px-3 rounded text-lg my-2 shadow-lg'>Delete</Link>
+                  {
+                    allUserData?.totalUsers?.map((val, index) => {
+                      return (
+                        <tr key={index}>
+                          <td className='p-5'>{val._id}</td>
+                          <td className='p-5'>{val.name}</td>
+                          <td className='p-5'>{val.email}</td>
+                          <td className='p-5'>{val.role}</td>
+                          <td className='p-5'>
+                            <Link href={`/admin/users/edit/${val._id}`} className='bg-gray-500 text-white border py-2 px-3 rounded text-lg my-2 shadow-lg'>Edit</Link>
+                            <Link href={"/admin/users/delete"} className='bg-red-500 text-white border py-2 px-3 rounded text-lg my-2 shadow-lg'>Delete</Link>
 
-                    </td>
+                          </td>
+                        </tr>
+                      )
+                    })
+                  }
 
-                  </tr>
                 </tbody>
               </table>
             </div>

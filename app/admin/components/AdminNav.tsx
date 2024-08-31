@@ -1,7 +1,5 @@
 import Link from 'next/link'
 import React from 'react'
-import Logo from '@/public/next.svg'
-import Image from 'next/image'
 import { signOut } from 'next-auth/react'
 
 interface User {
