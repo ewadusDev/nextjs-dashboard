@@ -1,11 +1,12 @@
-import React from 'react'
+"use client"
+import React, { useEffect, useState } from 'react'
 import AdminNav from './components/AdminNav'
 import Container from './components/Containers'
 import Footer from './components/Footer'
 import SideNav from './components/SideNav'
 import Content from './components/Content'
-
-
+import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 
 const AdminPage = () => {
     const style = {
@@ -16,16 +17,69 @@ const AdminPage = () => {
         opacity: '10%'
     } as React.CSSProperties;
 
+    const { data: session }: { data: any } = useSession()
+    if (!session) redirect('/login')
+    if (session.user?.role !== "admin") redirect('/welcome')
+
+    const [totalPost, setTotalPost] = useState([])
+    const [totalUser, setTotalUser] = useState([])
+
+    useEffect(() => {
+
+        const getTotalPost = async () => {
+            try {
+                const resp = await fetch('/api/totalposts', {
+                    method: "GET",
+                    cache: 'no-store',
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                if (!resp.ok) throw new Error("Failed to get total posts")
+
+                const data = await resp.json()
+                setTotalPost(data)
+
+            } catch (err) {
+                console.error(err)
+            }
+        }
+
+        const getTotalUser = async () => {
+            try {
+                const resp = await fetch('/api/totalusers', {
+                    method: "GET",
+                    cache: 'no-store',
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                if (!resp.ok) throw new Error("Failed to get total posts")
+
+                const data = await resp.json()
+                setTotalUser(data)
+
+            } catch (err) {
+                console.error(err)
+            }
+        }
+
+        getTotalPost()
+        getTotalUser()
+
+    }, [])
+
+
 
     return (
         <Container>
-            <AdminNav />
+            <AdminNav session={session} />
             <div className='flex-grow' >
-            <div className='w-screen h-[calc(100vh-60px)] absolute' style={style}/>
+                <div className='w-screen h-[calc(100vh-60px)] absolute' style={style} />
                 <div className='container mx-auto relative z-30'>
                     <div className="flex justify-between mt-10 ">
                         <SideNav />
-                        <Content />
+                        <Content totalPost={totalPost} totalUser={totalUser} />
                     </div>
                 </div>
             </div>

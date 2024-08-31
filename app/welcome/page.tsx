@@ -9,7 +9,6 @@ import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import DeleteBtn from '../components/DeleteBtn'
 
-
 interface Getpost {
     _id: string
     title: string
@@ -24,7 +23,10 @@ interface Posts {
 
 const WelcomePage = () => {
     const { data: session } = useSession()
+    
     if (!session) redirect('/login')
+    if (session.user?.role === 'admin') redirect('/admin')
+
     const [posts, setPosts] = useState<Posts | null>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
