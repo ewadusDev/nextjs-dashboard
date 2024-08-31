@@ -21,3 +21,17 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ posts })
 
 }
+
+export async function DELETE(req: NextRequest) {
+    const id = req.nextUrl.searchParams.get("id")
+
+    try {
+        await connectMongoDB()
+        await Post.findByIdAndDelete(id)
+        return NextResponse.json({ message: "Post was deleted" }, { status: 200 })
+
+    } catch (err) {
+        console.error(err)
+    }
+
+}

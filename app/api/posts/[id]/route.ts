@@ -1,6 +1,6 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import Post from "@/models/post";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(req: Request, { params }: { params: { id: number } }) {
     const { id } = params

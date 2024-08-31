@@ -7,6 +7,8 @@ import Image from 'next/image'
 import Container from '../components/Container'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
+import DeleteBtn from '../components/DeleteBtn'
+
 
 interface Getpost {
     _id: string
@@ -90,8 +92,7 @@ const WelcomePage = () => {
                                             <p>{val.content}</p>
                                             <div className="mt-5">
                                                 <Link href={`/edit/${val._id}`} className='bg-gray-500 text-white border py-2 px-3 rounded-md text-lg my-2'>Edit</Link>
-                                                <Link href={`/delete/${val._id}`} className='bg-red-500 text-white border py-2 px-3 rounded-md text-lg my-2'>Delete</Link>
-
+                                                <DeleteBtn id={val._id} />
                                             </div>
                                         </div>
                                     </div>
