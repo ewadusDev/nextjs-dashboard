@@ -1,5 +1,5 @@
 'use client'
-import { useState, FormEvent,use } from 'react'
+import { useState, FormEvent, use } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Link from 'next/link'
@@ -12,6 +12,7 @@ const CreatePage = () => {
     const router = useRouter()
     const { data: session } = useSession()
     if (!session) redirect("/login")
+
 
     const [title, setTitle] = useState<string>("")
     const [image, setImage] = useState<string>("")
@@ -31,15 +32,15 @@ const CreatePage = () => {
                 body: JSON.stringify({ title, img: image, content, userEmail: currentUserEmail })
             })
 
-            if(resp.ok){
+            if (resp.ok) {
                 router.push('/welcome')
-            }else{
+            } else {
                 alert("Failed while create a post")
                 throw new Error("Failed to create a post")
             }
 
         } catch (err) {
-            console.error("something was wrong while submitting form",err)
+            console.error("something was wrong while submitting form", err)
         }
     }
 

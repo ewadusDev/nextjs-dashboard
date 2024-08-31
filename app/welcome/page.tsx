@@ -28,7 +28,6 @@ const WelcomePage = () => {
     const [error, setError] = useState("")
     const currentUserEmail = session.user?.email
 
-
     useEffect(() => {
 
         const getPost = async () => {
