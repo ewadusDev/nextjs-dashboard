@@ -12,7 +12,7 @@ const authOption: NextAuthOptions = {
             name: 'credentials',
             credentials: {},
             async authorize(credentials, req) {
-                const { email, password } = credentials
+                const { email, password }: any = credentials
 
                 await connectMongoDB()
                 const user = await User.findOne({ email })
@@ -40,7 +40,7 @@ const authOption: NextAuthOptions = {
         signIn: "/login"    // หน้าที่ auth อยากรู้ว่า login หน้าไหน
     },
     callbacks: {
-        async jwt({ token, user, session }) { // ข้อมูลจากหลังบ้าน เพื่อส่งให้ session ไปหน้าบ้าน
+        async jwt({ token, user, session }: any) { // ข้อมูลจากหลังบ้าน เพื่อส่งให้ session ไปหน้าบ้าน
             console.log("jwt BE token", token)
             console.log("jwt BE user", user)
 
