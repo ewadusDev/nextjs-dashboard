@@ -1,10 +1,14 @@
-import React from 'react'
+"use client"
+import React, { useEffect, useState } from 'react'
 import AdminNav from '../components/AdminNav'
 import Containers from '../components/Containers'
 import Footer from '../components/Footer'
 import SideNav from '../components/SideNav'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
+
 
 
 const AdminPostPage = () => {
@@ -15,15 +19,39 @@ const AdminPostPage = () => {
     backgroundPosition: 'center',
     filter: 'blur(5px)',
     opacity: '10%'
-} as React.CSSProperties;
+  } as React.CSSProperties;
 
 
+  const { data: session } = useSession()
 
-  return ( 
+  if (!session) redirect('/login')
+  if (session.user?.role !== "admin") redirect('/welcome')
+
+  const [postedData, setPostedData] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resp = await fetch('/api/totalposts', {
+          cache: 'no-store'
+        })
+
+        if (!resp.ok) throw new Error('Failed to load posts')
+        const data = await resp.json()
+        setPostedData(data)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    fetchData()
+  }, [])
+
+  console.log(postedData)
+  return (
     <Containers>
-      <AdminNav />
+      <AdminNav session={session} />
       <div className='flex-grow'>
-      <div className='w-screen h-[calc(100vh-60px)] absolute' style={style}/>
+        <div className='w-screen h-[calc(100vh-60px)] absolute' style={style} />
         <div className='flex mt-10 relative z-30'>
           <SideNav />
           <div className='p-10'>
@@ -42,18 +70,21 @@ const AdminPostPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className='p-5'>adds13141</td>
-                    <td className='p-5'>This is post title</td>
-                    <td className='p-5'><Image width={80} height={80} alt='Post image' className='my-3 rounded-md' src={'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29kaW5nfGVufDB8fDB8fHww'}/></td>
-                    <td className='p-5'>This is post content</td>
-                    <td className='p-5'>
-                      <Link href={"/admin/posts/edit"} className='bg-gray-500 text-white border py-2 px-3 rounded text-lg my-2'>Edit</Link>
-                      <Link href={"/admin/posts/delete"} className='bg-red-500 text-white border py-2 px-3 rounded text-lg my-2'>Delete</Link>
+                  {postedData.totalPosts?.map((val, index) => {
+                    return (
+                      <tr key={index}>
+                        <td className='p-5'>{val._id}</td>
+                        <td className='p-5'>{val.title}</td>
+                        <td className='p-5'><Image width={80} height={80} alt='Post image' className='my-3 rounded-md' src={val.img} /></td>
+                        <td className='p-5'>{val.content}</td>
+                        <td className='p-5'>
+                          <Link href={`/admin/posts/edit/${val._id}`} className='bg-gray-500 text-white border py-2 px-3 rounded text-lg my-2'>Edit</Link>
+                          <Link href={"/admin/posts/delete"} className='bg-red-500 text-white border py-2 px-3 rounded text-lg my-2'>Delete</Link>
+                        </td>
+                      </tr>
+                    )
+                  })}
 
-                    </td>
-
-                  </tr>
                 </tbody>
               </table>
             </div>

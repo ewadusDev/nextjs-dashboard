@@ -6,8 +6,6 @@ const DeleteBtn = ({ id }: { id: string }) => {
 
     const handleDelete = async () => {
         const confirm = window.confirm("Are you sure?")
-
-
         try {
             if (confirm) {
                 const resp = await fetch(`/api/totalusers?id=${id}`, {

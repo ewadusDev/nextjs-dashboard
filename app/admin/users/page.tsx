@@ -78,7 +78,6 @@ const page = () => {
                           <td className='p-5'>{val.role}</td>
                           <td className='p-5'>
                             <Link href={`/admin/users/edit/${val._id}`} className='bg-gray-500 text-white border py-2 px-3 rounded text-lg my-2 shadow-lg'>Edit</Link>
-                            {/* <Link href={"/admin/users/delete"} className='bg-red-500 text-white border py-2 px-3 rounded text-lg my-2 shadow-lg'>Delete</Link> */}
                             <DeleteBtn id={val._id} />
                           </td>
                         </tr>

@@ -51,13 +51,13 @@ const AdminEditUserPage = ({ params }: { params: { id: string } }) => {
                 body: JSON.stringify({ newName, newEmail, newPassword })
             })
 
-            if(!resp.ok) throw new Error("Failed tp update user")
+            if (!resp.ok) throw new Error("Failed tp update user")
 
-                router.refresh()
-                router.push('/admin/users')
+            router.refresh()
+            router.push('/admin/users')
 
         } catch (err) {
-
+            console.error(err)
         }
 
     }
