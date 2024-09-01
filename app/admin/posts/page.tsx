@@ -8,8 +8,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
-
-
+import DeleteBtn from './DeleteBtn'
 
 const AdminPostPage = () => {
 
@@ -79,7 +78,9 @@ const AdminPostPage = () => {
                         <td className='p-5'>{val.content}</td>
                         <td className='p-5'>
                           <Link href={`/admin/posts/edit/${val._id}`} className='bg-gray-500 text-white border py-2 px-3 rounded text-lg my-2'>Edit</Link>
-                          <Link href={"/admin/posts/delete"} className='bg-red-500 text-white border py-2 px-3 rounded text-lg my-2'>Delete</Link>
+                          {/* <Link href={"/admin/posts/delete"} className='bg-red-500 text-white border py-2 px-3 rounded text-lg my-2'>Delete</Link> */}
+
+                          <DeleteBtn id={val._id} />
                         </td>
                       </tr>
                     )

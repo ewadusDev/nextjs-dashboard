@@ -7,7 +7,7 @@ import SideNav from '../components/SideNav'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
-import DeleteBtn from '../components/DeleteBtn'
+import DeleteBtn from './DeleteBtn'
 
 
 const page = () => {
