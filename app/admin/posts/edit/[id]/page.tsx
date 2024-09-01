@@ -61,7 +61,7 @@ const AdminEditPage = ({ params }: { params: { id: string } }) => {
 
         fetchData()
 
-    }, [])
+    }, [id])
 
 
 
