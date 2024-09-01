@@ -22,8 +22,8 @@ interface Posts {
 }
 
 const WelcomePage = () => {
-    const { data: session } = useSession()
-    
+    const { data: session }: any = useSession()
+
     if (!session) redirect('/login')
     if (session.user?.role === 'admin') redirect('/admin')
 
