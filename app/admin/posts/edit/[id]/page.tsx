@@ -10,13 +10,13 @@ import { redirect, useRouter } from 'next/navigation'
 
 const AdminEditPage = ({ params }: { params: { id: string } }) => {
     const { id } = params
-    const { data: session } = useSession()
+    const { data: session }: { data: any } = useSession()
     const router = useRouter()
 
     if (!session) redirect('/login')
     if (session.user?.role !== 'admin') redirect('/welcome')
     // usestate old data
-    const [postedData, setPostedData] = useState(null)
+    const [postedData, setPostedData] = useState<any>(null)
     // usestate new data
     const [newTitle, setNewTitle] = useState("")
     const [newImg, setNewImg] = useState("")

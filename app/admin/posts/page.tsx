@@ -21,12 +21,12 @@ const AdminPostPage = () => {
   } as React.CSSProperties;
 
 
-  const { data: session } = useSession()
+  const { data: session }: { data: any } = useSession()
 
   if (!session) redirect('/login')
   if (session.user?.role !== "admin") redirect('/welcome')
 
-  const [postedData, setPostedData] = useState([])
+  const [postedData, setPostedData] = useState<any>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,7 +69,7 @@ const AdminPostPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {postedData.totalPosts?.map((val, index) => {
+                  {postedData.totalPosts?.map((val: any, index: number) => {
                     return (
                       <tr key={index}>
                         <td className='p-5'>{val._id}</td>

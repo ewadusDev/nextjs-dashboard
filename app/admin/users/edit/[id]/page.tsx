@@ -10,14 +10,14 @@ import { useRouter } from 'next/navigation'
 
 
 const AdminEditUserPage = ({ params }: { params: { id: string } }) => {
-    const { data: session } = useSession()
+    const { data: session }: { data: any } = useSession()
     const router = useRouter()
     if (!session) redirect('/login')
     if (session.user?.role !== "admin") redirect('/welcome')
 
     const { id } = params
     // old user
-    const [userOldData, setUserOldData] = useState(null)
+    const [userOldData, setUserOldData] = useState<any>(null)
     // new user data
     const [newName, setNewName] = useState("")
     const [newEmail, setNewEmail] = useState("")
