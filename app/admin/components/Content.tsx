@@ -2,29 +2,7 @@ import React from 'react'
 import { FaUsers, FaRegNewspaper } from 'react-icons/fa6'
 
 
-
-interface Post {
-    _id: string
-}
-
-interface User {
-    _id: string
-}
-
-interface TotalPost {
-    totalPosts: Post[]
-}
-
-interface TotalUser {
-    totalUsers: User[]
-}
-interface Props {
-    totalPost: TotalPost
-    totalUser: TotalUser
-}
-
-
-const Content = (props: Props) => {
+const Content = (props: any) => {
 
     const { totalPost, totalUser } = props
 
